@@ -17,7 +17,7 @@ def input_students
     end
     puts "---------"
     puts "Whats is the students name?"
-    name = STDIN.gets.chomp
+    name = STDIN.gets.strip
   end
   @students
 end
