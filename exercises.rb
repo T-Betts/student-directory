@@ -10,7 +10,11 @@ def input_students
     cohort = input_cohort
     country = input_country
     @students << {name: name, cohort: cohort, country: country}
-    puts "Now we have #{@students.count} students."
+    if @students.count == 1
+      puts "Now we have 1 great student"
+    else
+      puts "Now we have #{@students.count} students."
+    end
     puts "---------"
     puts "Whats is the students name?"
     name = STDIN.gets.chomp
@@ -73,7 +77,29 @@ def print_students_name_fewer_than_12_characters
 end
 
 def print_footer
-  puts "Overall we have #{@students.count} great students".center(@line_width)
+  if @students.count == 1
+    puts "Overall we have 1 great student".center(@line_width)
+  else
+    puts "Overall we have #{@students.count} great students".center(@line_width)
+  end
+end
+
+def print_students_in_given_cohort
+  puts "Which cohort would you liker to view"
+  cohort = STDIN.gets.chomp
+  puts students_by_cohort(cohort)
+end
+
+def students_by_cohort(str)
+  puts "#{str.capitalize} cohort".center(@line_width)
+  puts "---------".center(@line_width)
+  return_list = []
+  @students.each do |student|
+    if student[:cohort] == str.downcase.to_sym
+      return_list << "#{student[:name]}, from: #{student[:country]}"
+    end
+  end
+  return_list
 end
 
 def print_menu
@@ -83,6 +109,7 @@ def print_menu
   puts "4. Load list from exercises_students.csv"
   puts "5. Show students whose names begin with letter of your choice"
   puts "6. Show students whose name is 12 characters or less in length"
+  puts "7. Show students in a particular cohort"
   puts "9. Exit"
 end
 
@@ -106,6 +133,8 @@ def process(selection)
       print_students_beginning_with_letter
     when "6"
       print_students_name_fewer_than_12_characters
+    when "7"
+      print_students_in_given_cohort
     when "9"
       exit
     else
@@ -116,7 +145,7 @@ end
 def save_students
   file = File.open("exercises_students.csv", "w")
     @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
+    student_data = [student[:name], student[:country], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
@@ -126,8 +155,8 @@ end
 def load_students(filename = "exercises_students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+    name, country, cohort = line.chomp.split(",")
+    @students << {name: name, country: country, cohort: cohort.to_sym}
   end
   file.close
 end
