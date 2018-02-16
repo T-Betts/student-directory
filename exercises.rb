@@ -114,9 +114,12 @@ def print_menu
 end
 
 def show_students
-  print_header
-  print_student_list
-  print_footer
+  if @students.empty?
+  else
+    print_header
+    print_student_list
+    print_footer
+  end
 end
 
 def process(selection)
